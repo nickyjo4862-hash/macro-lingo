@@ -5,10 +5,7 @@ on:
     - cron: "*/15 * * * *"  # 15분마다 (Actions는 보장이 아니라 best-effort)
   workflow_dispatch:        # 수동 실행 버튼
   push:
-    branches: [main]
-    paths:
-      - "fetcher.py"
-      - ".github/workflows/snapshot.yml"
+    branches: [main]        # main 브랜치 어떤 변경이든 트리거 (HTML 포함)
 
 permissions:
   contents: write
