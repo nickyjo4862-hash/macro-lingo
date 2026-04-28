@@ -119,6 +119,29 @@
   }
   .preset-btn:hover { background: var(--ink); color: white; border-color: var(--ink); }
 
+  /* === Toast 알림 === */
+  .alloc-toast {
+    position: fixed;
+    top: 80px; left: 50%;
+    transform: translateX(-50%) translateY(-12px);
+    padding: 10px 18px;
+    background: #dc2626; color: white;
+    border-radius: 999px;
+    font-size: 13px; font-weight: 700;
+    box-shadow: 0 6px 20px rgba(220,38,38,0.35);
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
+    z-index: 9999;
+  }
+  .alloc-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* 총합 게이지 — 임계 시 빨강 */
+  .pf-header .total b.over { color: #dc2626; }
+  .pf-header .total b.full { color: #16a34a; }
+
   /* === 섹터 슬라이더 === */
   .sector-sliders {
     display: grid; grid-template-columns: 1fr;
@@ -673,6 +696,8 @@
 
 <div class="stage" id="stage"></div>
 
+<div class="alloc-toast" id="allocToast">⚠ 섹터 총합은 100을 넘을 수 없습니다</div>
+
 <script>
 /* ============================================================
    0) ALLOCATION — 섹터 단위 가상 포트폴리오 (학습용)
@@ -1110,9 +1135,11 @@ function renderSectorPanel() {
   }).join('');
   document.getElementById('sectorSliders').innerHTML = sliderRows;
 
-  // 2) 정규화된 비중 + 총합
+  // 2) 총합 표시 — X / 100 형식, 임계 시 색상 변경
   const { mix, total } = normalizeMix(_alloc);
-  document.getElementById('pfTotal').textContent = total + ' (정규화 100%)';
+  const pfTotalEl = document.getElementById('pfTotal');
+  pfTotalEl.textContent = `${total} / 100`;
+  pfTotalEl.className = total >= 100 ? (total > 100 ? 'over' : 'full') : '';
 
   // 3) 섹터 믹스 바 + 범례
   document.getElementById('sectorMix').innerHTML = mix.map(m => {
@@ -1387,16 +1414,49 @@ async function loadSnapshot() {
     if (k) applySectorPreset(k);
   });
 
-  // 슬라이더 입력 — 끌고 있는 동안엔 즉각 시각만 갱신, 손 떼면 저장+재계산
+  // Toast 헬퍼
+  let _toastTimer = null;
+  function showAllocToast(msg) {
+    const t = document.getElementById('allocToast');
+    if (!t) return;
+    if (msg) t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => t.classList.remove('show'), 1600);
+  }
+
+  // 슬라이더 입력 — 끌고 있는 동안 100 초과 시 캡 + 경고
   const slidersHost = document.getElementById('sectorSliders');
   slidersHost.addEventListener('input', (e) => {
     const sector = e.target.dataset.sector;
     if (!sector) return;
-    e.target.style.setProperty('--val', e.target.value + '%');
+
+    let newVal = parseFloat(e.target.value) || 0;
+    // 다른 섹터 합 → 이 슬라이더가 가질 수 있는 최대치
+    const othersSum = Object.entries(_alloc)
+      .filter(([k]) => k !== sector)
+      .reduce((a, [, v]) => a + (v || 0), 0);
+    const maxAllowed = Math.max(0, 100 - othersSum);
+
+    if (newVal > maxAllowed) {
+      newVal = maxAllowed;
+      e.target.value = newVal;
+      showAllocToast(`⚠ 섹터 총합은 100을 넘을 수 없습니다 (남은 여유 ${maxAllowed})`);
+    }
+
+    e.target.style.setProperty('--val', newVal + '%');
     const pctSpan = document.querySelector(`[data-pct="${sector}"]`);
-    if (pctSpan) pctSpan.textContent = e.target.value;
-    // 끌고 있는 동안 바구니/토크도 라이브 업데이트 (가벼움)
-    _alloc[sector] = parseFloat(e.target.value) || 0;
+    if (pctSpan) pctSpan.textContent = newVal;
+    _alloc[sector] = newVal;
+
+    // 총합 표시도 라이브 업데이트
+    const total = Object.values(_alloc).reduce((a, b) => a + (b || 0), 0);
+    const pfTotalEl = document.getElementById('pfTotal');
+    if (pfTotalEl) {
+      pfTotalEl.textContent = `${total} / 100`;
+      pfTotalEl.className = total >= 100 ? (total > 100 ? 'over' : 'full') : '';
+    }
+
     renderBaskets();
     renderTiltGauge();
   });
