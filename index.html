@@ -1341,7 +1341,6 @@ async function loadSnapshot() {
     presentSel.innerHTML += `<option value="${k}" ${k==='2026_now'?'selected':''}>${v.label}</option>`;
     pastSel.innerHTML += `<option value="${k}" ${k==='2008_lehman'?'selected':''}>${v.label}</option>`;
   });
-  document.getElementById('render').addEventListener('click', render);
   ['sector','present','past'].forEach(id =>
     document.getElementById(id).addEventListener('change', () => {
       // 섹터/현재시점 바뀌면 → 거울도 AI 추천으로 자동 재설정
