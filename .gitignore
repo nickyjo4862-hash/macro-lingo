@@ -1,0 +1,21 @@
+# API 키 — 절대 커밋 금지
+config.json
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# 로그
+*.log
+fetcher.log

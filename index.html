@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>Macro-Lingo · Dual-Lens Engine</title>
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --paper: #ffffff;
+    --soft: #f4f4f8;
+    --line: #e6e6ef;
+    --gold: #ffb300;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+  .controls {
+    position: sticky; top: 0; z-index: 100;
+    display: flex; gap: 12px; align-items: center;
+    padding: 14px 24px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+  .controls label { font-size: 13px; color: #666; font-weight: 600; }
+  .controls select, .controls button {
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .controls button {
+    background: var(--ink); color: white; border-color: var(--ink);
+  }
+  .controls .similarity {
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 700;
+    position: relative;
+    cursor: help;
+  }
+  .similarity .num { color: #e63946; font-size: 18px; }
+  .sim-tooltip {
+    position: absolute; top: 110%; right: 0;
+    background: var(--ink); color: white;
+    padding: 12px 14px; border-radius: 10px;
+    font-size: 12px; font-weight: 500; line-height: 1.6;
+    width: 260px; opacity: 0; pointer-events: none;
+    transition: opacity 0.2s; z-index: 200;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .similarity:hover .sim-tooltip { opacity: 1; }
+  .sim-tooltip .row { display: flex; justify-content: space-between; }
+  .sim-tooltip .row span:last-child { color: #ffb300; font-weight: 700; }
+
+  /* Switch */
+  .switch {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #666; cursor: pointer;
+    user-select: none;
+  }
+  .switch input { display: none; }
+  .switch .track {
+    width: 32px; height: 18px; background: #ddd;
+    border-radius: 999px; position: relative;
+    transition: background 0.2s;
+  }
+  .switch .track::after {
+    content: ''; position: absolute;
+    width: 14px; height: 14px; background: white;
+    border-radius: 50%; top: 2px; left: 2px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .switch input:checked + .track { background: var(--ink); }
+  .switch input:checked + .track::after { transform: translateX(14px); }
+
+  /* Reduced motion */
+  body.reduce-motion .particle,
+  body.reduce-motion .lightning,
+  body.reduce-motion .wire,
+  body.reduce-motion .character .avatar,
+  body.reduce-motion .keyword,
+  body.reduce-motion .badge .dot,
+  body.reduce-motion .edge-row .icon {
+    animation: none !important;
+  }
+
+  /* Portfolio panel */
+  .pf-panel {
+    background: white;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    max-height: 0;
+  }
+  .pf-panel.open { max-height: 600px; overflow-y: auto; }
+  .pf-inner { padding: 20px 24px; }
+  .pf-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .pf-header h3 { font-size: 15px; font-weight: 800; }
+  .pf-header .total { margin-left: auto; font-size: 13px; color: #666; }
+  .pf-header .total b { color: var(--ink); font-size: 16px; }
+
+  .preset-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .preset-btn {
+    padding: 6px 12px;
+    background: var(--soft); border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 12px; font-weight: 600;
+    cursor: pointer; font-family: inherit;
+  }
+  .preset-btn:hover { background: var(--ink); color: white; border-color: var(--ink); }
+
+  /* === 섹터 슬라이더 === */
+  .sector-sliders {
+    display: grid; grid-template-columns: 1fr;
+    gap: 8px; margin-bottom: 12px;
+  }
+  .slider-row {
+    display: grid;
+    grid-template-columns: 28px 110px 1fr 56px;
+    align-items: center; gap: 10px;
+    padding: 6px 12px;
+    background: var(--soft);
+    border-radius: 10px;
+  }
+  .slider-row .ava { font-size: 18px; text-align: center; }
+  .slider-row .nm { font-size: 12px; font-weight: 700; color: #555; }
+  .slider-row input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 6px; border-radius: 999px;
+    background: linear-gradient(90deg,
+      var(--secColor) 0%, var(--secColor) var(--val,0%),
+      #ddd var(--val,0%), #ddd 100%);
+    outline: none; cursor: pointer;
+  }
+  .slider-row input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: white; border: 2px solid var(--secColor);
+    cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .slider-row .pct {
+    text-align: right; font-weight: 800; font-size: 13px;
+    color: var(--secColor);
+  }
+
+  /* === 메타포 행 (바구니 + 토크 게이지) === */
+  .metaphor-row {
+    display: grid; grid-template-columns: 1.5fr 1fr;
+    gap: 16px; margin-top: 16px;
+  }
+  .meta-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .meta-card h4 {
+    font-size: 12px; font-weight: 800;
+    letter-spacing: 0.5px; color: #888;
+    margin-bottom: 12px;
+  }
+
+  /* 바구니 + 계란 */
+  .baskets {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 6px; align-items: end;
+    height: 130px;
+  }
+  .basket {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    gap: 3px;
+  }
+  .basket .eggs {
+    display: flex; flex-wrap: wrap-reverse; justify-content: center;
+    gap: 2px; width: 100%; min-height: 36px;
+    padding: 2px;
+  }
+  .basket .egg {
+    width: 8px; height: 11px;
+    border-radius: 50% 50% 45% 45%;
+    background: #ddd;
+    box-shadow: inset -1px -2px 2px rgba(0,0,0,0.15);
+  }
+  .basket .egg.gold {
+    background: linear-gradient(135deg, #ffd54f 0%, #ffb300 60%, #c87f00 100%);
+    box-shadow: inset -1px -2px 2px rgba(0,0,0,0.2),
+                0 0 4px rgba(255,179,0,0.6);
+    animation: golden-glow 2.5s ease-in-out infinite;
+  }
+  @keyframes golden-glow {
+    0%,100% { box-shadow: inset -1px -2px 2px rgba(0,0,0,0.2), 0 0 4px rgba(255,179,0,0.6); }
+    50%     { box-shadow: inset -1px -2px 2px rgba(0,0,0,0.2), 0 0 10px rgba(255,179,0,0.9); }
+  }
+  .basket .basket-body {
+    width: 92%; height: 22px;
+    background: linear-gradient(180deg, #b07a44 0%, #8b5a2b 100%);
+    border-radius: 4px 4px 14px 14px;
+    position: relative;
+    transition: transform 0.3s;
+  }
+  .basket .basket-body::before {
+    content: ''; position: absolute;
+    inset: 2px 4px auto 4px; height: 4px;
+    background: rgba(0,0,0,0.18); border-radius: 2px;
+  }
+  .basket.heavy .basket-body { transform: scaleY(1.25) translateY(2px); }
+  .basket .lbl {
+    font-size: 10px; font-weight: 700;
+    color: var(--secColor);
+    margin-top: 2px; text-align: center;
+    line-height: 1.1;
+  }
+  .basket .lbl small { display: block; font-size: 9px; color: #888; font-weight: 600; }
+  .basket .chg {
+    display: block;
+    font-size: 9px; font-weight: 800;
+    margin-top: 1px;
+  }
+  .basket .chg.up   { color: #16a34a; }
+  .basket .chg.down { color: #dc2626; }
+  .basket .chg.flat { color: #888; }
+
+  /* 토크 게이지 (천칭) */
+  .tilt-gauge {
+    position: relative;
+    height: 130px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tilt-gauge .pivot {
+    position: absolute;
+    bottom: 18px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-bottom: 22px solid var(--ink);
+    z-index: 1;
+  }
+  .tilt-gauge .beam {
+    position: absolute;
+    bottom: 38px; left: 50%;
+    width: 80%; height: 6px;
+    background: linear-gradient(90deg, #6b7280, #1f2937, #6b7280);
+    border-radius: 3px;
+    transform-origin: 50% 50%;
+    transform: translateX(-50%) rotate(var(--tilt, 0deg));
+    transition: transform 0.5s cubic-bezier(.5,1.6,.4,1);
+    z-index: 2;
+  }
+  .tilt-gauge .beam::before, .tilt-gauge .beam::after {
+    content: ''; position: absolute; top: -5px;
+    width: 14px; height: 14px;
+    background: #fff; border: 2px solid var(--ink);
+    border-radius: 50%;
+  }
+  .tilt-gauge .beam::before { left: 4px; }
+  .tilt-gauge .beam::after  { right: 4px; }
+  .tilt-gauge .scale-axis {
+    position: absolute; bottom: 4px; left: 8%; right: 8%;
+    display: flex; justify-content: space-between;
+    font-size: 9px; color: #aaa; font-weight: 700;
+  }
+  .tilt-readout {
+    margin-top: 10px;
+    padding: 8px 10px;
+    background: var(--soft); border-radius: 8px;
+    font-size: 12px; line-height: 1.5;
+  }
+  .tilt-readout .num { font-weight: 800; font-size: 16px; }
+  .tilt-readout.warn .num { color: #dc2626; }
+  .tilt-readout.ok .num   { color: #16a34a; }
+
+  .sector-mix {
+    display: flex; gap: 4px;
+    height: 8px; border-radius: 4px;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+  .sector-mix .seg { transition: flex 0.3s; }
+  .mix-legend {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    margin-top: 8px; font-size: 11px;
+  }
+  .mix-legend .item { display: flex; align-items: center; gap: 4px; }
+  .mix-legend .swatch { width: 10px; height: 10px; border-radius: 2px; }
+
+  .api-note {
+    margin-top: 14px; padding: 10px 12px;
+    background: #f0f9ff; border-left: 3px solid #0891b2;
+    border-radius: 6px;
+    font-size: 12px; color: #555;
+  }
+
+  /* AI suggestion banner */
+  .suggestion {
+    background: linear-gradient(90deg, #fff7e0 0%, #fff 100%);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 24px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 14px;
+  }
+  .suggestion .ai-tag {
+    background: var(--ink); color: white;
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.5px;
+  }
+  .suggestion .summary { flex: 1; line-height: 1.4; }
+  .suggestion .summary strong { color: var(--sectorColor, #1d4ed8); }
+  .suggestion button {
+    padding: 6px 12px; border: 1px solid var(--ink);
+    background: white; border-radius: 999px;
+    font-size: 12px; font-weight: 700; cursor: pointer;
+    font-family: inherit;
+  }
+  .suggestion button:hover { background: var(--ink); color: white; }
+
+  .stage {
+    display: grid;
+    grid-template-rows: 1fr 60px 1fr;
+    height: calc(100vh - 64px);
+    min-height: 800px;
+  }
+
+  .lens {
+    position: relative;
+    overflow: hidden;
+    padding: 32px 48px;
+  }
+  .lens-top { border-bottom: 1px solid var(--line); }
+  .lens-bottom { border-top: 1px solid var(--line); }
+
+  /* Animated weather background */
+  .weather {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .weather::before, .weather::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--bg);
+    opacity: 0.55;
+  }
+  .particles {
+    position: absolute; inset: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.35;
+    animation: drift var(--dur, 12s) linear infinite;
+  }
+  @keyframes drift {
+    0%   { transform: translate(0,0); }
+    50%  { transform: translate(40px,-20px); }
+    100% { transform: translate(0,0); }
+  }
+  @keyframes storm {
+    0%,100% { transform: translateX(0); opacity: 0.4; }
+    50%     { transform: translateX(-30px); opacity: 0.7; }
+  }
+  .lightning {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.9) 0%, transparent 40%);
+    opacity: 0;
+    animation: flash 6s ease-in-out infinite;
+  }
+  @keyframes flash {
+    0%, 90%, 100% { opacity: 0; }
+    92%, 94%      { opacity: 0.8; }
+  }
+
+  .lens-content {
+    position: relative; z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap: 24px;
+    height: 100%;
+    align-items: center;
+  }
+  .era-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .lens h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .lens .mood {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .character {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center;
+  }
+  .character .avatar {
+    font-size: 84px;
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.15));
+  }
+  .character.dancing .avatar { animation: bounce 1.4s ease-in-out infinite; }
+  .character.bracing .avatar { animation: shiver 0.4s ease-in-out infinite; }
+  .character.steady .avatar  { animation: float 3s ease-in-out infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0) rotate(-3deg);} 50%{transform:translateY(-18px) rotate(3deg);} }
+  @keyframes shiver { 0%,100%{transform:translateX(-2px);} 50%{transform:translateX(2px);} }
+  @keyframes float  { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-8px);} }
+  .character .label {
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    background: white;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 2px solid var(--sectorColor, #555);
+    color: var(--sectorColor, #555);
+  }
+
+  .news-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 18px;
+    padding: 16px 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .news-card .src { font-size: 10px; color: #999; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .news-card .headline { font-weight: 700; margin-bottom: 10px; }
+  .news-card .keyword {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 800;
+    animation: pulse-bg 2s ease-in-out infinite;
+  }
+  @keyframes pulse-bg {
+    0%,100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+    50%     { box-shadow: 0 0 0 6px transparent; opacity: 0.85; }
+  }
+  .news-card .stats {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-top: 8px; font-size: 11px;
+  }
+  .stat-pill { padding: 2px 8px; background: var(--soft); border-radius: 999px; }
+
+  /* Central time-line */
+  .timeline {
+    position: relative;
+    background: linear-gradient(180deg, #fafaff 0%, #ffffff 50%, #fafaff 100%);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .timeline svg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+  }
+  .timeline .badge {
+    position: relative; z-index: 2;
+    display: flex; gap: 10px; align-items: center;
+    padding: 8px 18px;
+    background: white;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 13px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .badge .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #e63946;
+    animation: heartbeat 1s ease-in-out infinite;
+  }
+  @keyframes heartbeat {
+    0%,100% { transform: scale(1); opacity: 1; }
+    50%     { transform: scale(1.4); opacity: 0.6; }
+  }
+
+  /* Vibrating wires */
+  .wire {
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+  .wire.violent { animation: vibrate-strong 0.15s linear infinite; stroke-width: 3.5; }
+  .wire.intense { animation: vibrate-mid 0.3s linear infinite; }
+  .wire.steady  { animation: vibrate-soft 1s ease-in-out infinite; }
+
+  @keyframes vibrate-strong {
+    0%,100% { transform: translateY(0); }
+    25%     { transform: translateY(-3px); }
+    75%     { transform: translateY(3px); }
+  }
+  @keyframes vibrate-mid {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-1.5px); }
+  }
+  @keyframes vibrate-soft {
+    0%,100% { opacity: 0.6; }
+    50%     { opacity: 1; }
+  }
+
+  /* Briefing panel */
+  .briefing {
+    padding: 24px 48px;
+    border-top: 1px solid var(--line);
+    background: var(--soft);
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+  }
+  .panel {
+    background: white;
+    border-radius: 20px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+  .panel h3 {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #888;
+    margin-bottom: 12px;
+  }
+  .briefing-line {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    padding-left: 16px;
+    position: relative;
+  }
+  .briefing-line::before {
+    content: ''; position: absolute; left: 0; top: 8px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--sectorColor, #555);
+  }
+  .briefing-line strong { color: var(--sectorColor, #1a1a2e); }
+
+  .map-edges { display: flex; flex-direction: column; gap: 8px; }
+  .edge-row {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px;
+  }
+  .edge-row .icon {
+    width: 32px; height: 4px; border-radius: 2px;
+  }
+  .edge-row .name { flex: 1; font-weight: 600; }
+  .edge-row .pct  { font-weight: 800; font-size: 11px; }
+
+  .quest {
+    background: linear-gradient(135deg, #1a1a2e 0%, #2d2d4a 100%);
+    color: white;
+  }
+  .quest h3 { color: rgba(255,255,255,0.5); }
+  .quest .rank { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
+  .quest .tier { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
+  .quest .mission {
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .quest .reward {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--ink);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+  }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button id="togglePf" style="background:#fff7e0; color:var(--ink); border-color:#ffd87a;">📦 내 포트폴리오</button>
+  <label>섹터</label>
+  <select id="sector"></select>
+  <label>현재 시점</label>
+  <select id="present"></select>
+  <label>거울 시대</label>
+  <select id="past"></select>
+  <label class="switch" title="진동·파티클 끄기">
+    <input type="checkbox" id="reduceMotion" />
+    <span class="track"></span>
+    <span>모션 감속</span>
+  </label>
+  <div class="similarity">
+    유사도 <span class="num" id="simNum">--</span>% <span style="color:#999;">ⓘ</span>
+    <div class="sim-tooltip" id="simTooltip">
+      <div style="margin-bottom:8px; font-weight:700;">유사도 계산 분해</div>
+      <div class="row"><span>환율 패턴</span><span id="brkFx">--</span></div>
+      <div class="row"><span>금리 결</span><span id="brkRate">--</span></div>
+      <div class="row"><span>변동성(VIX)</span><span id="brkVix">--</span></div>
+      <div class="row" style="margin-top:6px; padding-top:6px; border-top:1px solid #444;">
+        <span>섹터 가중치</span><span id="brkSect">--</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pf-panel" id="pfPanel">
+  <div class="pf-inner">
+    <div class="pf-header">
+      <h3>📦 내 가상 포트폴리오 — 섹터 단위</h3>
+      <span style="font-size:12px; color:#888;">슬라이더로 섹터별 비중을 조절하세요. 거시경제 학습용이라 실제 거래는 일어나지 않습니다.</span>
+      <div class="total">총합 <b id="pfTotal">100</b></div>
+    </div>
+
+    <div class="preset-row" id="presetRow"></div>
+
+    <div class="sector-sliders" id="sectorSliders"></div>
+
+    <div class="sector-mix" id="sectorMix"></div>
+    <div class="mix-legend" id="mixLegend"></div>
+
+    <div class="metaphor-row">
+      <div class="meta-card">
+        <h4>🧺 황금 계란 바구니 — 섹터별 비중</h4>
+        <div class="baskets" id="baskets"></div>
+        <div style="font-size:10px; color:#999; margin-top:8px;">
+          ✦ 방산 섹터의 계란만 황금색 — '대장 황금 계란'입니다.
+        </div>
+      </div>
+      <div class="meta-card">
+        <h4>⚖️ 무게중심 (τ = 비중 × 변동성)</h4>
+        <div class="tilt-gauge">
+          <div class="beam" id="tiltBeam"></div>
+          <div class="pivot"></div>
+          <div class="scale-axis"><span>← 안전 (저변동)</span><span>(고변동) 위험 →</span></div>
+        </div>
+        <div class="tilt-readout" id="tiltReadout"></div>
+      </div>
+    </div>
+
+    <div class="api-note">
+      💡 <b>거시경제 학습 도구입니다.</b> 추후 ECOS/FRED 실데이터(섹터 등락률·변동성)를 연결하면 시장 흐름이 무게중심에 어떻게 작용하는지 실시간으로 볼 수 있습니다.
+    </div>
+  </div>
+</div>
+
+<div class="suggestion" id="suggestion" style="display:none;">
+  <span class="ai-tag">AI 추천</span>
+  <div class="summary" id="suggestSummary"></div>
+  <button id="acceptSuggest">✓ 이 거울로 보기</button>
+  <button id="dismissSuggest" style="border-color:#ccc; color:#999;">✕</button>
+</div>
+
+<div class="stage" id="stage"></div>
+
+<script>
+/* ============================================================
+   0) ALLOCATION — 섹터 단위 가상 포트폴리오 (학습용)
+   ============================================================ */
+const SECTOR_PRESETS = {
+  'defense_heavy': { label:'🛡️ 방산 중심',  alloc:{ defense:50, tech:20, energy:10, finance:10, bio:5,  consumer:5  } },
+  'ai_tech':       { label:'🚀 AI/반도체',  alloc:{ defense:5,  tech:60, energy:5,  finance:10, bio:10, consumer:10 } },
+  'balanced':      { label:'⚖️ 균형형',     alloc:{ defense:17, tech:17, energy:17, finance:17, bio:16, consumer:16 } },
+  'energy_hedge':  { label:'⛽ 에너지 헤지', alloc:{ defense:10, tech:15, energy:45, finance:15, bio:5,  consumer:10 } },
+  'defensive':     { label:'🏦 방어형',     alloc:{ defense:5,  tech:10, energy:10, finance:30, bio:20, consumer:25 } }
+};
+
+/* 섹터별 변동성 — 30일 수익률 표준편차 (snapshot.json 로드 시 덮어씀) */
+const SECTOR_VOL = {
+  finance:  0.9,
+  consumer: 1.1,
+  defense:  1.4,
+  bio:      1.6,
+  tech:     1.8,
+  energy:   2.1
+};
+
+/* 섹터별 당일 등락률 (snapshot.json 로드 시 덮어씀) */
+const SECTOR_CHANGE = {
+  finance: 0, consumer: 0, defense: 0,
+  bio: 0, tech: 0, energy: 0
+};
+
+/* localStorage 헬퍼 */
+const ALLOC_KEY = 'macro_lingo_alloc_v2';
+function loadAllocations() {
+  try {
+    const raw = localStorage.getItem(ALLOC_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return { ...SECTOR_PRESETS.defense_heavy.alloc };
+}
+function saveAllocations(alloc) {
+  localStorage.setItem(ALLOC_KEY, JSON.stringify(alloc));
+}
+
+/* 비중 정규화 (합이 100% 되도록) */
+function normalizeMix(alloc) {
+  const total = Object.values(alloc).reduce((a,b) => a + (b||0), 0);
+  const mix = Object.entries(alloc)
+    .map(([sector, v]) => ({
+      sector,
+      raw: v || 0,
+      pct: total ? Math.round((v||0)/total*1000)/10 : 0
+    }))
+    .filter(m => m.raw > 0)
+    .sort((a,b) => b.raw - a.raw);
+  return { mix, total };
+}
+
+/* 토크 계산: τ = 비중 × 변동성, 위치는 변동성 순으로 좌(저변동) → 우(고변동) */
+function calculateTorque(alloc) {
+  const ordered = Object.keys(SECTOR_VOL).sort((a,b) => SECTOR_VOL[a] - SECTOR_VOL[b]);
+  const total = Object.values(alloc).reduce((a,b) => a + (b||0), 0) || 1;
+
+  let netTorque = 0;
+  let totalLoad = 0;
+  const perSector = {};
+  ordered.forEach((s, i) => {
+    const pct = (alloc[s] || 0) / total * 100;
+    const vol = SECTOR_VOL[s];
+    const position = i - (ordered.length - 1) / 2; // -2.5..+2.5
+    const torque = pct * vol * position;
+    netTorque += torque;
+    totalLoad += pct * vol;
+    perSector[s] = { pct, vol, torque, position };
+  });
+
+  // 기울기 각도 — 시각적으로 ±25° 클램핑
+  const tiltDeg = Math.max(-25, Math.min(25, netTorque / 30));
+  // 하중 점수 (0~100) — 평균 변동성 1.5 가정 시 100% 분산 = 150 → /1.5 → 100
+  const stress = Math.min(100, Math.round(totalLoad / 1.5));
+
+  return { tiltDeg, stress, totalLoad, netTorque, perSector };
+}
+
+/* ============================================================
+   1) DATA MODEL — 시나리오 데이터로 모든 것이 구동된다.
+   ============================================================ */
+const SECTORS = {
+  defense: {
+    name: '수호 팀 (방산/우주)',
+    color: '#1d4ed8',
+    avatar: '🛡️',
+    keyDriver: 'USD/KRW',
+    perks: ['해외 수주 달러 수익', '지정학 프리미엄'],
+    nodes: [['환율','수호팀'], ['지정학','수주 백로그'], ['금리','밸류에이션']],
+  },
+  tech: {
+    name: '혁신 팀 (반도체/AI)',
+    color: '#7c3aed',
+    avatar: '🚀',
+    keyDriver: 'SOX 지수',
+    perks: ['AI Capex 사이클', '메모리 가격'],
+    nodes: [['SOX','혁신팀'], ['금리','PER'], ['전력 수요','AI 인프라']],
+  },
+  energy: {
+    name: '생존 팀 (에너지)',
+    color: '#ea580c',
+    avatar: '⛽',
+    keyDriver: 'Brent 유가',
+    perks: ['공급 충격 헤지', 'OPEC+ 시그널'],
+    nodes: [['유가','생존팀'], ['물가','공급망'], ['달러','원자재']],
+  },
+  finance: {
+    name: '자본 팀 (금융)',
+    color: '#0891b2',
+    avatar: '🏦',
+    keyDriver: '10Y 금리',
+    perks: ['NIM 확대', '배당 매력'],
+    nodes: [['금리','NIM'], ['신용 스프레드','대손'], ['집값','담보가치']],
+  },
+  bio: {
+    name: '치유 팀 (바이오/헬스)',
+    color: '#16a34a',
+    avatar: '💊',
+    keyDriver: 'FDA 승인',
+    perks: ['파이프라인 가치', '인구 고령화'],
+    nodes: [['금리','PSR'], ['임상 결과','밸류'], ['환율','로열티']],
+  },
+  consumer: {
+    name: '생활 팀 (소비재)',
+    color: '#db2777',
+    avatar: '🛍️',
+    keyDriver: '실질 임금',
+    perks: ['브랜드 프리미엄', '환율 마진'],
+    nodes: [['소비심리','매출'], ['원자재','마진'], ['환율','수출']],
+  }
+};
+
+const ERAS = {
+  '2026_now': {
+    label: '2026 실시간',
+    bg: 'linear-gradient(180deg,#e8e4f5 0%,#f4f0ff 60%,#fff 100%)',
+    moodWord: '긴장된 평온',
+    weather: 'breeze',
+    fxKRW: 1392, rates: 4.2, vix: 18, narrative: '지정학 불안 속 선택적 강세',
+    headlines: [
+      { src: '연합뉴스 · 2026-04-28', text: '원/달러 1,392원 돌파… 방산 수출주 강세', keyword: '1,392원' }
+    ]
+  },
+  '2008_lehman': {
+    label: '2008 리먼 사태',
+    bg: 'linear-gradient(180deg,#7a1f1f 0%,#c44545 50%,#f4d4d4 100%)',
+    moodWord: '붕괴 직전 정적',
+    weather: 'storm',
+    fxKRW: 1500, rates: 3.8, vix: 80, narrative: '유동성 경색, 모든 섹터 동반 하락',
+    headlines: [
+      { src: 'Reuters · 2008-09-15', text: 'Lehman Brothers 파산 신청, 원화 1,500원 돌파', keyword: '1,500원' }
+    ]
+  },
+  '1997_imf': {
+    label: '1997 IMF 외환위기',
+    bg: 'linear-gradient(180deg,#5c2c0a 0%,#a85a2a 50%,#f0d4b8 100%)',
+    moodWord: '국가 부도 공포',
+    weather: 'storm',
+    fxKRW: 1962, rates: 25, vix: 90, narrative: '외환 보유고 고갈, 구제금융',
+    headlines: [
+      { src: '한겨레 · 1997-12-03', text: 'IMF 구제금융 합의… 원/달러 1,962원', keyword: '1,962원' }
+    ]
+  },
+  '2020_covid': {
+    label: '2020 COVID 팬데믹',
+    bg: 'linear-gradient(180deg,#1a3a4a 0%,#4a6a7a 50%,#d4e0e8 100%)',
+    moodWord: '봉쇄와 유동성 홍수',
+    weather: 'fog',
+    fxKRW: 1280, rates: 0.5, vix: 82, narrative: '제로금리, 비대면 폭증',
+    headlines: [
+      { src: 'WHO · 2020-03-11', text: '팬데믹 선언… 글로벌 증시 서킷브레이커', keyword: '서킷브레이커' }
+    ]
+  },
+  '2000_dotcom': {
+    label: '2000 닷컴 버블',
+    bg: 'linear-gradient(180deg,#2d2d6a 0%,#6a4d9a 50%,#e0d4f0 100%)',
+    moodWord: '광기 후 숙취',
+    weather: 'fog',
+    fxKRW: 1264, rates: 6.5, vix: 35, narrative: 'IT 섹터 PER 200배 → 붕괴',
+    headlines: [
+      { src: 'WSJ · 2000-03-10', text: 'NASDAQ 5,048 정점… 인터넷주 광풍', keyword: 'NASDAQ' }
+    ]
+  },
+  '1973_oil': {
+    label: '1973 오일쇼크',
+    bg: 'linear-gradient(180deg,#4a2a0a 0%,#a86a2a 50%,#f0e0c0 100%)',
+    moodWord: '에너지 패권 전쟁',
+    weather: 'storm',
+    fxKRW: 400, rates: 8, vix: 50, narrative: 'OPEC 금수조치, 유가 4배',
+    headlines: [
+      { src: 'NYT · 1973-10-17', text: 'OPEC 원유 금수조치… 유가 4배 폭등', keyword: '유가 4배' }
+    ]
+  },
+  '2022_inflation': {
+    label: '2022 인플레이션 쇼크',
+    bg: 'linear-gradient(180deg,#6a3a1a 0%,#c47a4a 50%,#f4e4d4 100%)',
+    moodWord: '금리 폭주',
+    weather: 'breeze',
+    fxKRW: 1440, rates: 4.5, vix: 32, narrative: 'Fed 9연속 인상, 채권 폭락',
+    headlines: [
+      { src: 'Bloomberg · 2022-10-25', text: '원/달러 1,440원… 美 10Y 4.5% 돌파', keyword: '4.5%' }
+    ]
+  }
+};
+
+/* 섹터 × 시대 별 캐릭터 거동 */
+function characterBehavior(sectorKey, eraKey) {
+  if (eraKey === '2026_now') return { mode: 'dancing', caption: '바람 타고 덩크 🏀' };
+  // 과거 시대 — 섹터별 생존 양상
+  const survivors = {
+    '2008_lehman':  { defense: 'steady', tech: 'bracing',  energy: 'bracing',  finance: 'bracing', bio: 'steady',   consumer: 'bracing' },
+    '1997_imf':     { defense: 'bracing',tech: 'bracing',  energy: 'steady',   finance: 'bracing', bio: 'bracing',  consumer: 'bracing' },
+    '2020_covid':   { defense: 'bracing',tech: 'dancing',  energy: 'bracing',  finance: 'bracing', bio: 'dancing',  consumer: 'bracing' },
+    '2000_dotcom':  { defense: 'steady', tech: 'bracing',  energy: 'steady',   finance: 'steady',  bio: 'steady',   consumer: 'steady'  },
+    '1973_oil':     { defense: 'steady', tech: 'bracing',  energy: 'dancing',  finance: 'bracing', bio: 'steady',   consumer: 'bracing' },
+    '2022_inflation':{defense: 'dancing',tech: 'bracing',  energy: 'dancing',  finance: 'steady',  bio: 'bracing',  consumer: 'bracing' }
+  };
+  const mode = (survivors[eraKey] || {})[sectorKey] || 'bracing';
+  const captions = {
+    dancing: '폭풍 속 호황 ⚡',
+    bracing: '바닥 짚고 버티는 중 😣',
+    steady:  '천천히 항해 ⛵'
+  };
+  return { mode, caption: captions[mode] };
+}
+
+/* ============================================================
+   2) SIMILARITY ENGINE — 두 시대의 패턴 매칭
+   ============================================================ */
+function computeSimilarity(present, past, sectorKey) {
+  const fxDelta = Math.abs(present.fxKRW - past.fxKRW) / Math.max(present.fxKRW, past.fxKRW);
+  const rateDelta = Math.abs(present.rates - past.rates) / 10;
+  const vixDelta = Math.abs(present.vix - past.vix) / 100;
+
+  let raw = 1 - (fxDelta * 0.5 + rateDelta * 0.25 + vixDelta * 0.25);
+  raw = Math.max(0.15, Math.min(0.95, raw));
+
+  // 섹터별 가중치 (예: 방산은 환율 패턴에 더 민감)
+  const sectorWeight = { defense: 1.05, tech: 0.95, energy: 1.0, finance: 1.1, bio: 0.9, consumer: 0.95 };
+  raw *= (sectorWeight[sectorKey] || 1.0);
+  raw = Math.min(0.95, raw);
+
+  return Math.round(raw * 100);
+}
+
+/* 진동 강도 결정 — 유사도 점수 + 토크 하중 결합 */
+function vibrationLevel(score) {
+  const tiltStress = window.__tiltStress || 0;
+  const tiltAbs = Math.abs(window.__tiltDeg || 0);
+  // 하중이 높거나 기울기가 클수록 진동을 끌어올림
+  const combined = Math.max(score, score * 0.6 + tiltStress * 0.5 + tiltAbs * 1.2);
+  if (combined >= 70) return 'violent';
+  if (combined >= 50) return 'intense';
+  return 'steady';
+}
+
+/* 유사도 계산 분해 — 툴팁용 */
+function similarityBreakdown(present, past, sectorKey) {
+  const fxMatch   = Math.round((1 - Math.abs(present.fxKRW - past.fxKRW) / Math.max(present.fxKRW, past.fxKRW)) * 100);
+  const rateMatch = Math.round((1 - Math.abs(present.rates - past.rates) / 10) * 100);
+  const vixMatch  = Math.round((1 - Math.abs(present.vix - past.vix) / 100) * 100);
+  const weight = { defense:1.05, tech:0.95, energy:1.0, finance:1.1, bio:0.9, consumer:0.95 }[sectorKey] || 1.0;
+  return { fxMatch, rateMatch, vixMatch, weight: `×${weight.toFixed(2)}` };
+}
+
+/* AI 자동 추천 — 현재 시점과 가장 닮은 과거 시대 찾기 */
+function suggestMirror(presentKey, sectorKey) {
+  const present = ERAS[presentKey];
+  let best = null, bestScore = 0;
+  Object.entries(ERAS).forEach(([k, era]) => {
+    if (k === presentKey) return;
+    const score = computeSimilarity(present, era, sectorKey);
+    if (score > bestScore) { bestScore = score; best = k; }
+  });
+  return { key: best, score: bestScore };
+}
+
+/* ============================================================
+   3) RENDERERS
+   ============================================================ */
+function renderParticles(weather, color) {
+  const n = 18;
+  let html = '<div class="particles">';
+  for (let i = 0; i < n; i++) {
+    const size = weather === 'storm' ? 4 + Math.random()*8 : 6 + Math.random()*12;
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
+    const dur = 6 + Math.random() * 10;
+    const anim = weather === 'storm' ? 'storm' : 'drift';
+    html += `<span class="particle" style="
+      left:${x}%; top:${y}%;
+      width:${size}px; height:${size}px;
+      background:${color};
+      animation: ${anim} ${dur}s ease-in-out infinite;
+      animation-delay:-${Math.random()*5}s;"></span>`;
+  }
+  html += '</div>';
+  if (weather === 'storm') html += '<div class="lightning"></div>';
+  return html;
+}
+
+function renderLens({ era, sector, position, characterMode, characterCap }) {
+  const tone = position === 'top' ? 'lens-top' : 'lens-bottom';
+  const headline = era.headlines[0];
+  const sectorMeta = SECTORS[sector];
+
+  return `
+    <section class="lens ${tone}">
+      <div class="weather" style="--bg:${era.bg}">
+        ${renderParticles(era.weather, position === 'top' ? '#7c5fc4' : '#aa3030')}
+      </div>
+      <div class="lens-content" style="--sectorColor:${sectorMeta.color}">
+        <div>
+          <div class="era-tag" style="color:${sectorMeta.color}">${era.label.toUpperCase()}</div>
+          <h2>${era.narrative}</h2>
+          <div class="mood">분위기 · ${era.moodWord}</div>
+          <div class="news-card">
+            <div class="src">${headline.src}</div>
+            <div class="headline">
+              ${headline.text.replace(headline.keyword,
+                `<span class="keyword" style="color:${sectorMeta.color}; background:${sectorMeta.color}22;">${headline.keyword}</span>`)}
+            </div>
+            <div class="stats">
+              <span class="stat-pill">USD/KRW ${era.fxKRW}</span>
+              <span class="stat-pill">10Y ${era.rates}%</span>
+              <span class="stat-pill">VIX ${era.vix}</span>
+            </div>
+          </div>
+        </div>
+        <div class="character ${characterMode}">
+          <div class="avatar">${sectorMeta.avatar}</div>
+          <div class="label">${sectorMeta.name}</div>
+          <div style="margin-top:8px; font-size:11px; color:#666;">${characterCap}</div>
+        </div>
+        <div></div>
+      </div>
+    </section>
+  `;
+}
+
+function renderTimeline(score) {
+  const level = vibrationLevel(score);
+  // SVG 전선 — 위에서 아래로 흐르는 두 가닥
+  return `
+    <div class="timeline">
+      <svg viewBox="0 0 1200 60" preserveAspectRatio="none">
+        <path class="wire ${level}" d="M 100 0 Q 300 30 500 30 T 1100 60" stroke="#1d4ed8" />
+        <path class="wire ${level}" d="M 200 60 Q 500 30 700 30 T 1100 0"  stroke="#e63946" />
+        <path class="wire ${level}" d="M 50 30 L 1150 30" stroke="#ffb300" stroke-dasharray="4 8" />
+      </svg>
+      <div class="badge">
+        <span class="dot"></span>
+        TIME-LINE · 유사도 ${score}% · 전선 ${level === 'violent' ? '🔴 격렬' : level === 'intense' ? '🟠 진동' : '🟢 안정'}
+      </div>
+    </div>
+  `;
+}
+
+function renderBriefing({ present, past, sector, score }) {
+  const meta = SECTORS[sector];
+  const fxGap = Math.abs(present.fxKRW - past.fxKRW);
+  const fxRhyme = fxGap < 200 ? '거의 동일한 패턴' : fxGap < 500 ? '비슷한 결' : '완전히 다른 결';
+
+  // 동적 브리핑 라인
+  const lines = [
+    `<strong>거울의 교훈:</strong> ${past.label}에는 ${past.narrative}. 환율 ${past.fxKRW}원·금리 ${past.rates}%.`,
+    `<strong>현재의 현실:</strong> ${present.label}는 ${present.narrative}. 환율 ${present.fxKRW}원·금리 ${present.rates}%로 ${fxRhyme}.`,
+    `<strong>${meta.name}의 무기:</strong> ${meta.perks.join(' / ')} — 그때와 본질적으로 다른 체력.`
+  ];
+
+  // 노드 진동 — 섹터별 노드 + 점수 기반 강도
+  const edges = meta.nodes.map((pair, i) => {
+    const intensity = Math.min(95, score + (i === 0 ? 10 : -i*8));
+    const lvl = vibrationLevel(intensity);
+    const colorMap = { violent: '#e63946', intense: '#f59e0b', steady: '#10b981' };
+    return `
+      <div class="edge-row">
+        <span class="icon" style="background:${colorMap[lvl]}; animation: vibrate-${lvl === 'violent' ? 'strong' : lvl === 'intense' ? 'mid' : 'soft'} 0.3s linear infinite;"></span>
+        <span class="name">[${pair[0]} ↔ ${pair[1]}]</span>
+        <span class="pct" style="color:${colorMap[lvl]}">${intensity}%</span>
+      </div>
+    `;
+  }).join('');
+
+  // 퀘스트 텍스트 — 시나리오에 맞춤
+  const questCopy = score >= 70
+    ? `${past.label}의 환율 폭등 시나리오와 ${score}% 일치. 환헤지 기술을 적용해 [${past.label.split(' ')[0]} 다이아 방패]를 해금하세요.`
+    : score >= 50
+    ? `${past.label}와 부분 일치(${score}%). ${meta.keyDriver} 변화를 추적해 [에코 리더] 뱃지를 노리세요.`
+    : `${past.label}와는 다른 결(${score}%). ${meta.keyDriver}에 집중한 정찰 퀘스트로 새 노드를 확보하세요.`;
+
+  return `
+    <section class="briefing" style="--sectorColor:${meta.color}">
+      <div class="panel" style="--sectorColor:${meta.color}">
+        <h3>🤖 미러링 AI 브리핑</h3>
+        ${lines.map(l => `<div class="briefing-line">${l}</div>`).join('')}
+      </div>
+      <div class="panel">
+        <h3>🌐 지식 지도 펄스</h3>
+        <div class="map-edges">${edges}</div>
+      </div>
+      <div class="panel quest">
+        <h3>🏆 탐험 리그</h3>
+        <div class="rank">Cartographer II</div>
+        <div class="tier">지도 안개 30% 제거 · +180 XP</div>
+        <div class="mission">${questCopy}</div>
+        <span class="reward">🎁 레트로 ${past.label.split(' ')[0]} 다이아 방패</span>
+      </div>
+    </section>
+  `;
+}
+
+/* ============================================================
+   3.5) SECTOR PANEL RENDER — 슬라이더 + 바구니 + 토크 게이지
+   ============================================================ */
+let _alloc = loadAllocations();
+
+function renderSectorPanel() {
+  // 1) 슬라이더 행
+  const sliderRows = Object.entries(SECTORS).map(([k, s]) => {
+    const v = _alloc[k] || 0;
+    return `
+      <div class="slider-row" style="--secColor:${s.color}">
+        <span class="ava">${s.avatar}</span>
+        <span class="nm">${s.name.split(' ')[0]}</span>
+        <input type="range" min="0" max="100" value="${v}"
+               data-sector="${k}"
+               style="--val:${v}%" />
+        <span class="pct" data-pct="${k}">${v}</span>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('sectorSliders').innerHTML = sliderRows;
+
+  // 2) 정규화된 비중 + 총합
+  const { mix, total } = normalizeMix(_alloc);
+  document.getElementById('pfTotal').textContent = total + ' (정규화 100%)';
+
+  // 3) 섹터 믹스 바 + 범례
+  document.getElementById('sectorMix').innerHTML = mix.map(m => {
+    const c = SECTORS[m.sector]?.color || '#999';
+    return `<div class="seg" style="flex:${m.raw}; background:${c};"></div>`;
+  }).join('');
+  document.getElementById('mixLegend').innerHTML = mix.map(m => {
+    const s = SECTORS[m.sector];
+    if (!s) return '';
+    return `<div class="item"><span class="swatch" style="background:${s.color};"></span>
+      ${s.avatar} ${s.name.split(' ')[0]} ${m.pct}%</div>`;
+  }).join('');
+
+  // 4) 황금 계란 바구니
+  renderBaskets();
+
+  // 5) 토크 기울기 게이지
+  renderTiltGauge();
+
+  // 6) 가장 비중 높은 섹터를 sector 드롭다운에 자동 반영
+  if (mix.length > 0) {
+    const dominant = mix[0].sector;
+    const sel = document.getElementById('sector');
+    if (sel.value !== dominant) sel.value = dominant;
+  }
+}
+
+function renderBaskets() {
+  const { mix } = normalizeMix(_alloc);
+  const html = Object.entries(SECTORS).map(([k, sector]) => {
+    const found = mix.find(m => m.sector === k);
+    const pct = found ? found.pct : 0;
+    const eggCount = Math.min(20, Math.round(pct / 5)); // 5%당 계란 1개, 최대 20개
+    const isGold = k === 'defense';
+    const heavy = pct >= 30 ? 'heavy' : '';
+    const eggs = Array.from({ length: eggCount }).map(() =>
+      `<span class="egg ${isGold ? 'gold' : ''}"></span>`
+    ).join('');
+    const chg = SECTOR_CHANGE[k] || 0;
+    const chgClass = chg > 0.05 ? 'up' : chg < -0.05 ? 'down' : 'flat';
+    const chgText = chg > 0 ? `+${chg.toFixed(2)}%` : `${chg.toFixed(2)}%`;
+    return `
+      <div class="basket ${heavy}" style="--secColor:${sector.color}">
+        <div class="eggs">${eggs}</div>
+        <div class="basket-body"></div>
+        <div class="lbl">
+          ${sector.avatar}
+          <small>${pct}%</small>
+          <span class="chg ${chgClass}">${chgText}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+  document.getElementById('baskets').innerHTML = html;
+}
+
+function renderTiltGauge() {
+  const t = calculateTorque(_alloc);
+  const beam = document.getElementById('tiltBeam');
+  beam.style.setProperty('--tilt', t.tiltDeg + 'deg');
+
+  const readout = document.getElementById('tiltReadout');
+  const danger = Math.abs(t.tiltDeg) > 12 || t.stress > 60;
+  readout.className = 'tilt-readout ' + (danger ? 'warn' : 'ok');
+
+  const dir = t.tiltDeg > 5 ? '오른쪽 (고변동 섹터 쏠림)'
+            : t.tiltDeg < -5 ? '왼쪽 (저변동 섹터 쏠림)'
+            : '중심 균형';
+  readout.innerHTML = `
+    기울기 <span class="num">${t.tiltDeg.toFixed(1)}°</span>
+    · 하중 <span class="num">${t.stress}</span>/100
+    <div style="font-size:11px; color:#666; margin-top:4px;">
+      ${dir} · ${danger ? '⚠️ 시스템 붕괴 위험 — 전선 진동 강화' : '✅ 안정 영역'}
+    </div>
+  `;
+
+  // 진동 결합용 전역 노출
+  window.__tiltStress = t.stress;
+  window.__tiltDeg = t.tiltDeg;
+}
+
+function applySectorPreset(key) {
+  const preset = SECTOR_PRESETS[key];
+  if (!preset) return;
+  _alloc = { ...preset.alloc };
+  saveAllocations(_alloc);
+  renderSectorPanel();
+  render();
+}
+
+function updateAllocation(sector, value) {
+  _alloc[sector] = parseFloat(value) || 0;
+  saveAllocations(_alloc);
+  renderSectorPanel();
+  render();
+}
+
+/* ============================================================
+   4) MAIN RENDER
+   ============================================================ */
+function render() {
+  const sector = document.getElementById('sector').value;
+  const presentKey = document.getElementById('present').value;
+  const pastKey = document.getElementById('past').value;
+  const present = ERAS[presentKey];
+  const past = ERAS[pastKey];
+  const score = computeSimilarity(present, past, sector);
+  const meta = SECTORS[sector];
+
+  const presentChar = characterBehavior(sector, presentKey);
+  const pastChar = characterBehavior(sector, pastKey);
+
+  document.getElementById('simNum').textContent = score;
+
+  // 유사도 분해 → 툴팁 채우기
+  const brk = similarityBreakdown(present, past, sector);
+  document.getElementById('brkFx').textContent   = brk.fxMatch + '%';
+  document.getElementById('brkRate').textContent = brk.rateMatch + '%';
+  document.getElementById('brkVix').textContent  = brk.vixMatch + '%';
+  document.getElementById('brkSect').textContent = brk.weight;
+
+  // AI 추천 배너 — 사용자가 고른 거울이 최적이 아니면 더 닮은 시대 제안
+  const sug = suggestMirror(presentKey, sector);
+  const sugBanner = document.getElementById('suggestion');
+  if (sug.key && sug.key !== pastKey && sug.score > score + 5) {
+    sugBanner.style.display = 'flex';
+    sugBanner.style.setProperty('--sectorColor', meta.color);
+    document.getElementById('suggestSummary').innerHTML =
+      `지금 시장은 <strong>${ERAS[sug.key].label}</strong>과 <strong>${sug.score}% 닮았습니다</strong> ` +
+      `(현재 선택한 ${past.label}는 ${score}%). ${meta.name} 관점에서 더 의미있는 거울일 수 있어요.`;
+    sugBanner.dataset.suggestKey = sug.key;
+  } else {
+    sugBanner.style.display = 'none';
+  }
+
+  // 한 줄 요약 — stage 위에 동적 헤더 추가
+  const survivalMode = pastChar.mode === 'dancing' ? '호황' : pastChar.mode === 'steady' ? '항해' : '생존';
+  const headerLine = `지금은 <strong>${past.label}</strong>과 <strong>${score}% 닮았고</strong>, ` +
+                     `당신의 <strong style="color:${meta.color};">${meta.name}</strong>은 그때 <strong>'${survivalMode}'</strong> 모드였어요.`;
+
+  document.getElementById('stage').innerHTML = `
+    <div style="grid-column:1/-1; padding:14px 24px; background:#fafafe; border-bottom:1px solid var(--line); font-size:14px; line-height:1.5;">
+      💡 ${headerLine}
+    </div>
+    ${renderLens({ era: present, sector, position: 'top',
+                    characterMode: presentChar.mode, characterCap: presentChar.caption })}
+    ${renderTimeline(score)}
+    ${renderLens({ era: past, sector, position: 'bottom',
+                    characterMode: pastChar.mode, characterCap: pastChar.caption })}
+    ${renderBriefing({ present, past, sector, score })}
+  `;
+  // stage grid를 1줄 헤더 + 기본 구조로 재조정
+  document.getElementById('stage').style.gridTemplateRows = 'auto 1fr 60px 1fr auto';
+}
+
+/* ============================================================
+   4.5) SNAPSHOT LOADER — fetcher.py가 만든 실데이터 적용
+   ============================================================ */
+async function loadSnapshot() {
+  try {
+    const r = await fetch('./data/snapshot.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error('snapshot 없음');
+    const snap = await r.json();
+
+    // 1) 매크로: ERAS['2026_now']에 실데이터 반영
+    const m = snap.macro || {};
+    const fx  = m.fx_usd_krw?.value;
+    const rate = m.us_10y?.value ?? m.kr_3y_bond?.value;
+    const vix = m.vix?.value;
+    if (ERAS['2026_now']) {
+      if (fx)   ERAS['2026_now'].fxKRW = Math.round(fx);
+      if (rate) ERAS['2026_now'].rates = parseFloat(rate.toFixed(2));
+      if (vix)  ERAS['2026_now'].vix   = Math.round(vix);
+      ERAS['2026_now'].label = `2026 실시간 · ${snap.updated_at?.slice(0,10) || ''}`;
+      // 헤드라인도 동적 업데이트
+      ERAS['2026_now'].headlines = [{
+        src: `LIVE · ECOS+FRED · ${snap.updated_at || ''}`,
+        text: `원/달러 ${Math.round(fx||0)}원 · 미 10Y ${(rate||0).toFixed(2)}% · VIX ${Math.round(vix||0)}`,
+        keyword: `${Math.round(fx||0)}원`
+      }];
+    }
+
+    // 2) 섹터 변동성 + 당일 등락률 덮어쓰기
+    const sec = snap.sectors || {};
+    Object.keys(SECTOR_VOL).forEach(k => {
+      if (sec[k]?.volatility_30d != null) SECTOR_VOL[k] = sec[k].volatility_30d;
+      if (sec[k]?.change_pct != null) SECTOR_CHANGE[k] = sec[k].change_pct;
+    });
+
+    // 3) 상태 표시 — 컨트롤바에 LIVE 배지
+    const ctrl = document.querySelector('.controls');
+    if (ctrl) {
+      const badge = document.createElement('span');
+      badge.style.cssText = 'margin-left:10px; padding:4px 10px; background:#16a34a; color:white; border-radius:999px; font-size:11px; font-weight:800;';
+      badge.textContent = `🟢 LIVE · ${snap.updated_at?.slice(11,16) || ''}`;
+      badge.title = `실데이터 적용: USD/KRW ${Math.round(fx||0)} · 10Y ${(rate||0).toFixed(2)}% · VIX ${Math.round(vix||0)}\n갱신: ${snap.updated_at}`;
+      ctrl.appendChild(badge);
+    }
+    console.log('✅ Snapshot loaded:', snap);
+    return true;
+  } catch (e) {
+    console.warn('⚠ Snapshot load 실패 — 기본 mock 데이터 사용:', e.message);
+    const ctrl = document.querySelector('.controls');
+    if (ctrl) {
+      const badge = document.createElement('span');
+      badge.style.cssText = 'margin-left:10px; padding:4px 10px; background:#888; color:white; border-radius:999px; font-size:11px; font-weight:800;';
+      badge.textContent = '⚪ DEMO (실데이터 없음)';
+      badge.title = 'fetcher.py 를 실행하면 실데이터가 적용됩니다.';
+      ctrl.appendChild(badge);
+    }
+    return false;
+  }
+}
+
+/* ============================================================
+   5) INIT — dropdown 채우기
+   ============================================================ */
+(function init() {
+  const sectorSel = document.getElementById('sector');
+  Object.entries(SECTORS).forEach(([k, v]) => {
+    sectorSel.innerHTML += `<option value="${k}">${v.avatar} ${v.name}</option>`;
+  });
+  const presentSel = document.getElementById('present');
+  const pastSel = document.getElementById('past');
+  Object.entries(ERAS).forEach(([k, v]) => {
+    presentSel.innerHTML += `<option value="${k}" ${k==='2026_now'?'selected':''}>${v.label}</option>`;
+    pastSel.innerHTML += `<option value="${k}" ${k==='2008_lehman'?'selected':''}>${v.label}</option>`;
+  });
+  document.getElementById('render').addEventListener('click', render);
+  ['sector','present','past'].forEach(id =>
+    document.getElementById(id).addEventListener('change', () => {
+      // 섹터/현재시점 바뀌면 → 거울도 AI 추천으로 자동 재설정
+      if (id !== 'past') {
+        const sector = document.getElementById('sector').value;
+        const presentKey = document.getElementById('present').value;
+        const sug = suggestMirror(presentKey, sector);
+        if (sug.key) document.getElementById('past').value = sug.key;
+      }
+      render();
+    }));
+
+  // AI 추천 수락
+  document.getElementById('acceptSuggest').addEventListener('click', () => {
+    const banner = document.getElementById('suggestion');
+    const key = banner.dataset.suggestKey;
+    if (key) {
+      document.getElementById('past').value = key;
+      render();
+    }
+  });
+  document.getElementById('dismissSuggest').addEventListener('click', () => {
+    document.getElementById('suggestion').style.display = 'none';
+  });
+
+  // 모션 감속 토글
+  document.getElementById('reduceMotion').addEventListener('change', (e) => {
+    document.body.classList.toggle('reduce-motion', e.target.checked);
+  });
+
+  // 포트폴리오 패널 토글
+  document.getElementById('togglePf').addEventListener('click', () => {
+    document.getElementById('pfPanel').classList.toggle('open');
+  });
+
+  // 프리셋 버튼 동적 생성
+  const presetRow = document.getElementById('presetRow');
+  presetRow.innerHTML = '<span style="font-size:12px; color:#888; align-self:center; margin-right:4px;">빠른 시작:</span>' +
+    Object.entries(SECTOR_PRESETS).map(([k,p]) =>
+      `<button class="preset-btn" data-preset="${k}">${p.label}</button>`
+    ).join('');
+  presetRow.addEventListener('click', (e) => {
+    const k = e.target.dataset.preset;
+    if (k) applySectorPreset(k);
+  });
+
+  // 슬라이더 입력 — 끌고 있는 동안엔 즉각 시각만 갱신, 손 떼면 저장+재계산
+  const slidersHost = document.getElementById('sectorSliders');
+  slidersHost.addEventListener('input', (e) => {
+    const sector = e.target.dataset.sector;
+    if (!sector) return;
+    e.target.style.setProperty('--val', e.target.value + '%');
+    const pctSpan = document.querySelector(`[data-pct="${sector}"]`);
+    if (pctSpan) pctSpan.textContent = e.target.value;
+    // 끌고 있는 동안 바구니/토크도 라이브 업데이트 (가벼움)
+    _alloc[sector] = parseFloat(e.target.value) || 0;
+    renderBaskets();
+    renderTiltGauge();
+  });
+  slidersHost.addEventListener('change', (e) => {
+    const sector = e.target.dataset.sector;
+    if (sector) updateAllocation(sector, e.target.value);
+  });
+
+  // 첫 렌더 — snapshot 로드 → 섹터 패널 → AI 추천 거울 → 메인
+  loadSnapshot().then(() => {
+    renderSectorPanel();
+    const initSector = document.getElementById('sector').value;
+    const initPresent = document.getElementById('present').value;
+    const initSug = suggestMirror(initPresent, initSector);
+    if (initSug.key) document.getElementById('past').value = initSug.key;
+    render();
+  });
+})();
+</script>
+</body>
+</html>
