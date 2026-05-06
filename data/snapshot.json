@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-05-05 23:30:16 KST",
+  "updated_at": "2026-05-06 01:11:43 KST",
   "macro": {
     "fx_usd_krw": {
-      "value": 1484.8,
-      "date": "20260504",
+      "value": 1470.5,
+      "date": "20260506",
       "unit": "원",
       "source": "ECOS"
     },
@@ -25,6 +25,11 @@
       "unit": "1980.01.04=100 ",
       "source": "ECOS"
     },
+    "us_10y": {
+      "value": 4.45,
+      "date": "2026-05-04",
+      "source": "FRED"
+    },
     "vix": {
       "value": 18.29,
       "date": "2026-05-04",
@@ -34,42 +39,52 @@
       "value": 3.64,
       "date": "2026-04-01",
       "source": "FRED"
+    },
+    "wti_oil": {
+      "value": 99.89,
+      "date": "2026-04-27",
+      "source": "FRED"
+    },
+    "dxy": {
+      "value": 118.3926,
+      "date": "2026-05-01",
+      "source": "FRED"
     }
   },
   "sectors": {
     "defense": {
-      "volatility_30d": 3.46,
-      "change_pct": 2.71,
+      "volatility_30d": 3.26,
+      "change_pct": -1.88,
       "ticker": "449450.KS",
       "source": "yfinance"
     },
     "tech": {
-      "volatility_30d": 3.95,
-      "change_pct": 5.34,
+      "volatility_30d": 3.83,
+      "change_pct": 6.03,
       "ticker": "091160.KS",
       "source": "yfinance"
     },
     "energy": {
-      "volatility_30d": 2.69,
-      "change_pct": 0.26,
+      "volatility_30d": 2.28,
+      "change_pct": -0.95,
       "ticker": "117460.KS",
       "source": "yfinance"
     },
     "finance": {
-      "volatility_30d": 2.3,
-      "change_pct": -0.88,
+      "volatility_30d": 1.88,
+      "change_pct": 1.24,
       "ticker": "091170.KS",
       "source": "yfinance"
     },
     "bio": {
-      "volatility_30d": 2.87,
-      "change_pct": 0.29,
+      "volatility_30d": 2.61,
+      "change_pct": -1.36,
       "ticker": "244580.KS",
       "source": "yfinance"
     },
     "consumer": {
-      "volatility_30d": 3.09,
-      "change_pct": 4.71,
+      "volatility_30d": 2.84,
+      "change_pct": 4.44,
       "ticker": "102780.KS",
       "source": "yfinance"
     }
