@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-07 17:24:12 KST",
+  "updated_at": "2026-05-07 19:11:39 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1456.8,
@@ -20,14 +20,19 @@
       "source": "ECOS"
     },
     "kospi": {
-      "value": 7384.56,
-      "date": "20260506",
+      "value": 7490.05,
+      "date": "20260507",
       "unit": "1980.01.04=100 ",
       "source": "ECOS"
     },
     "us_10y": {
       "value": 4.43,
       "date": "2026-05-05",
+      "source": "FRED"
+    },
+    "us_fed_rate": {
+      "value": 3.64,
+      "date": "2026-04-01",
       "source": "FRED"
     },
     "wti_oil": {
