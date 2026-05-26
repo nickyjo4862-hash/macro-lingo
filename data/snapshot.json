@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-26 19:57:18 KST",
+  "updated_at": "2026-05-26 21:40:43 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1513.3,
@@ -26,8 +26,8 @@
       "source": "ECOS"
     },
     "us_10y": {
-      "value": 4.57,
-      "date": "2026-05-21",
+      "value": 4.56,
+      "date": "2026-05-22",
       "source": "FRED"
     },
     "vix": {
@@ -46,8 +46,8 @@
       "source": "FRED"
     },
     "dxy": {
-      "value": 119.2825,
-      "date": "2026-05-15",
+      "value": 119.2868,
+      "date": "2026-05-22",
       "source": "FRED"
     }
   },
