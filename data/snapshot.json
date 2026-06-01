@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-06-01 07:21:30 KST",
+  "updated_at": "2026-06-01 13:08:10 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1503.2,
@@ -9,13 +9,13 @@
     },
     "kr_base_rate": {
       "value": 2.5,
-      "date": "202604",
+      "date": "202605",
       "unit": "연%",
       "source": "ECOS"
     },
     "kr_3y_bond": {
-      "value": 3.174,
-      "date": "20260529",
+      "value": 3.197,
+      "date": "20260601",
       "unit": "연%",
       "source": "ECOS"
     },
@@ -33,6 +33,11 @@
     "vix": {
       "value": 15.74,
       "date": "2026-05-28",
+      "source": "FRED"
+    },
+    "dxy": {
+      "value": 119.2868,
+      "date": "2026-05-22",
       "source": "FRED"
     }
   },
