@@ -1,6 +1,30 @@
 {
-  "updated_at": "2026-07-04 17:42:03 KST",
+  "updated_at": "2026-07-04 18:39:34 KST",
   "macro": {
+    "fx_usd_krw": {
+      "value": 1554.1,
+      "date": "20260703",
+      "unit": "원",
+      "source": "ECOS"
+    },
+    "kr_base_rate": {
+      "value": 2.5,
+      "date": "202606",
+      "unit": "연%",
+      "source": "ECOS"
+    },
+    "kr_3y_bond": {
+      "value": 3.335,
+      "date": "20260703",
+      "unit": "연%",
+      "source": "ECOS"
+    },
+    "kospi": {
+      "value": 8088.34,
+      "date": "20260703",
+      "unit": "1980.01.04=100 ",
+      "source": "ECOS"
+    },
     "us_10y": {
       "value": 4.48,
       "date": "2026-07-01",
@@ -29,40 +53,40 @@
   },
   "sectors": {
     "defense": {
-      "volatility_30d": 4.26,
-      "change_pct": 3.03,
+      "volatility_30d": 3.5,
+      "change_pct": 0.0,
       "ticker": "449450.KS",
-      "source": "yfinance"
+      "source": "fallback"
     },
     "tech": {
-      "volatility_30d": 5.66,
-      "change_pct": 5.34,
+      "volatility_30d": 4.0,
+      "change_pct": 0.0,
       "ticker": "091160.KS",
-      "source": "yfinance"
+      "source": "fallback"
     },
     "energy": {
-      "volatility_30d": 3.74,
-      "change_pct": 0.08,
+      "volatility_30d": 2.7,
+      "change_pct": 0.0,
       "ticker": "117460.KS",
-      "source": "yfinance"
+      "source": "fallback"
     },
     "finance": {
-      "volatility_30d": 3.2,
-      "change_pct": 2.78,
+      "volatility_30d": 2.4,
+      "change_pct": 0.0,
       "ticker": "091170.KS",
-      "source": "yfinance"
+      "source": "fallback"
     },
     "bio": {
-      "volatility_30d": 4.81,
-      "change_pct": -0.33,
+      "volatility_30d": 2.9,
+      "change_pct": 0.0,
       "ticker": "244580.KS",
-      "source": "yfinance"
+      "source": "fallback"
     },
     "consumer": {
-      "volatility_30d": 4.73,
-      "change_pct": 3.95,
+      "volatility_30d": 3.1,
+      "change_pct": 0.0,
       "ticker": "102780.KS",
-      "source": "yfinance"
+      "source": "fallback"
     }
   }
 }
