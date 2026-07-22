@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-22 16:48:50 KST",
+  "updated_at": "2026-07-22 18:02:21 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1475.6,
@@ -20,8 +20,8 @@
       "source": "ECOS"
     },
     "kospi": {
-      "value": 6747.95,
-      "date": "20260721",
+      "value": 6797.7,
+      "date": "20260722",
       "unit": "1980.01.04=100 ",
       "source": "ECOS"
     },
@@ -41,8 +41,8 @@
       "source": "FRED"
     },
     "wti_oil": {
-      "value": 79.2,
-      "date": "2026-07-13",
+      "value": 84.38,
+      "date": "2026-07-20",
       "source": "FRED"
     },
     "dxy": {
