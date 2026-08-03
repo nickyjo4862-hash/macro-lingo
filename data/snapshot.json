@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-03 06:51:52 KST",
+  "updated_at": "2026-08-03 10:32:42 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1441.1,
@@ -8,8 +8,8 @@
       "source": "ECOS"
     },
     "kr_base_rate": {
-      "value": 2.5,
-      "date": "202606",
+      "value": 2.75,
+      "date": "202607",
       "unit": "연%",
       "source": "ECOS"
     },
