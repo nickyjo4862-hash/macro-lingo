@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-08-03 23:01:10 KST",
+  "updated_at": "2026-08-04 00:15:32 KST",
   "macro": {
     "fx_usd_krw": {
-      "value": 1441.1,
-      "date": "20260731",
+      "value": 1433.6,
+      "date": "20260803",
       "unit": "원",
       "source": "ECOS"
     },
@@ -14,20 +14,35 @@
       "source": "ECOS"
     },
     "kr_3y_bond": {
-      "value": 3.365,
-      "date": "20260731",
+      "value": 3.358,
+      "date": "20260803",
       "unit": "연%",
       "source": "ECOS"
     },
     "kospi": {
-      "value": 6595.45,
-      "date": "20260731",
+      "value": 6257.45,
+      "date": "20260803",
       "unit": "1980.01.04=100 ",
       "source": "ECOS"
+    },
+    "us_10y": {
+      "value": 4.75,
+      "date": "2026-07-31",
+      "source": "FRED"
+    },
+    "vix": {
+      "value": 15.99,
+      "date": "2026-07-31",
+      "source": "FRED"
     },
     "us_fed_rate": {
       "value": 3.63,
       "date": "2026-07-01",
+      "source": "FRED"
+    },
+    "wti_oil": {
+      "value": 84.25,
+      "date": "2026-07-27",
       "source": "FRED"
     },
     "dxy": {
