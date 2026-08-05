@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-05 18:01:03 KST",
+  "updated_at": "2026-08-05 19:39:35 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1429.9,
@@ -24,6 +24,31 @@
       "date": "20260804",
       "unit": "1980.01.04=100 ",
       "source": "ECOS"
+    },
+    "us_10y": {
+      "value": 4.7,
+      "date": "2026-08-03",
+      "source": "FRED"
+    },
+    "vix": {
+      "value": 16.5,
+      "date": "2026-08-04",
+      "source": "FRED"
+    },
+    "us_fed_rate": {
+      "value": 3.63,
+      "date": "2026-07-01",
+      "source": "FRED"
+    },
+    "wti_oil": {
+      "value": 81.96,
+      "date": "2026-08-03",
+      "source": "FRED"
+    },
+    "dxy": {
+      "value": 119.7034,
+      "date": "2026-07-31",
+      "source": "FRED"
     }
   },
   "sectors": {
