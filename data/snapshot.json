@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-08-06 13:17:16 KST",
+  "updated_at": "2026-08-07 00:36:14 KST",
   "macro": {
     "fx_usd_krw": {
-      "value": 1428.2,
-      "date": "20260805",
+      "value": 1424.8,
+      "date": "20260806",
       "unit": "원",
       "source": "ECOS"
     },
@@ -14,25 +14,25 @@
       "source": "ECOS"
     },
     "kr_3y_bond": {
-      "value": 3.344,
-      "date": "20260805",
+      "value": 3.368,
+      "date": "20260806",
       "unit": "연%",
       "source": "ECOS"
     },
     "kospi": {
-      "value": 6598.26,
-      "date": "20260805",
+      "value": 6296.38,
+      "date": "20260806",
       "unit": "1980.01.04=100 ",
       "source": "ECOS"
     },
     "us_10y": {
       "value": 4.63,
-      "date": "2026-08-04",
+      "date": "2026-08-05",
       "source": "FRED"
     },
     "vix": {
-      "value": 16.5,
-      "date": "2026-08-04",
+      "value": 15.81,
+      "date": "2026-08-05",
       "source": "FRED"
     },
     "us_fed_rate": {
@@ -53,38 +53,38 @@
   },
   "sectors": {
     "defense": {
-      "volatility_30d": 5.52,
-      "change_pct": -1.78,
+      "volatility_30d": 5.51,
+      "change_pct": 1.42,
       "ticker": "449450.KS",
       "source": "yfinance"
     },
     "tech": {
-      "volatility_30d": 8.37,
-      "change_pct": -7.01,
+      "volatility_30d": 8.27,
+      "change_pct": 0.84,
       "ticker": "091160.KS",
       "source": "yfinance"
     },
     "energy": {
-      "volatility_30d": 3.96,
-      "change_pct": 0.04,
+      "volatility_30d": 4.0,
+      "change_pct": 4.37,
       "ticker": "117460.KS",
       "source": "yfinance"
     },
     "finance": {
-      "volatility_30d": 2.42,
-      "change_pct": 2.37,
+      "volatility_30d": 2.41,
+      "change_pct": -0.31,
       "ticker": "091170.KS",
       "source": "yfinance"
     },
     "bio": {
-      "volatility_30d": 4.76,
-      "change_pct": 1.93,
+      "volatility_30d": 4.74,
+      "change_pct": 0.17,
       "ticker": "244580.KS",
       "source": "yfinance"
     },
     "consumer": {
-      "volatility_30d": 5.69,
-      "change_pct": -4.17,
+      "volatility_30d": 5.68,
+      "change_pct": 1.28,
       "ticker": "102780.KS",
       "source": "yfinance"
     }
