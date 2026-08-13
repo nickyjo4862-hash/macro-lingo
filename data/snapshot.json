@@ -1,9 +1,59 @@
 {
-  "updated_at": "2026-08-13 22:01:45 KST",
-  "macro": {},
+  "updated_at": "2026-08-13 22:47:39 KST",
+  "macro": {
+    "fx_usd_krw": {
+      "value": 1415.0,
+      "date": "20260812",
+      "unit": "원",
+      "source": "ECOS"
+    },
+    "kr_base_rate": {
+      "value": 2.75,
+      "date": "202607",
+      "unit": "연%",
+      "source": "ECOS"
+    },
+    "kr_3y_bond": {
+      "value": 3.397,
+      "date": "20260812",
+      "unit": "연%",
+      "source": "ECOS"
+    },
+    "kospi": {
+      "value": 6579.04,
+      "date": "20260812",
+      "unit": "1980.01.04=100 ",
+      "source": "ECOS"
+    },
+    "us_10y": {
+      "value": 4.68,
+      "date": "2026-08-12",
+      "source": "FRED"
+    },
+    "vix": {
+      "value": 14.55,
+      "date": "2026-08-12",
+      "source": "FRED"
+    },
+    "us_fed_rate": {
+      "value": 3.63,
+      "date": "2026-07-01",
+      "source": "FRED"
+    },
+    "wti_oil": {
+      "value": 84.77,
+      "date": "2026-08-11",
+      "source": "FRED"
+    },
+    "dxy": {
+      "value": 119.0649,
+      "date": "2026-08-07",
+      "source": "FRED"
+    }
+  },
   "sectors": {
     "defense": {
-      "volatility_30d": 5.87,
+      "volatility_30d": 5.4,
       "change_pct": 2.4,
       "ticker": "449450.KS",
       "source": "yfinance"
