@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-14 03:11:44 KST",
+  "updated_at": "2026-08-14 04:59:42 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1415.0,
@@ -54,37 +54,37 @@
   "sectors": {
     "defense": {
       "volatility_30d": 5.7,
-      "change_pct": -0.83,
+      "change_pct": -0.61,
       "ticker": "449450.KS",
       "source": "yfinance"
     },
     "tech": {
-      "volatility_30d": 9.38,
-      "change_pct": 0.92,
+      "volatility_30d": 9.39,
+      "change_pct": 1.96,
       "ticker": "091160.KS",
       "source": "yfinance"
     },
     "energy": {
       "volatility_30d": 4.05,
-      "change_pct": 0.04,
+      "change_pct": 0.6,
       "ticker": "117460.KS",
       "source": "yfinance"
     },
     "finance": {
-      "volatility_30d": 1.95,
-      "change_pct": 0.63,
+      "volatility_30d": 1.96,
+      "change_pct": 0.94,
       "ticker": "091170.KS",
       "source": "yfinance"
     },
     "bio": {
-      "volatility_30d": 4.38,
-      "change_pct": -1.27,
+      "volatility_30d": 4.36,
+      "change_pct": -0.61,
       "ticker": "244580.KS",
       "source": "yfinance"
     },
     "consumer": {
-      "volatility_30d": 6.16,
-      "change_pct": 1.9,
+      "volatility_30d": 6.17,
+      "change_pct": 2.22,
       "ticker": "102780.KS",
       "source": "yfinance"
     }
