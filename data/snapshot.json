@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-08-13 23:31:38 KST",
+  "updated_at": "2026-08-14 00:42:28 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1415.0,
-      "date": "20260812",
+      "date": "20260813",
       "unit": "원",
       "source": "ECOS"
     },
@@ -14,14 +14,14 @@
       "source": "ECOS"
     },
     "kr_3y_bond": {
-      "value": 3.397,
-      "date": "20260812",
+      "value": 3.396,
+      "date": "20260813",
       "unit": "연%",
       "source": "ECOS"
     },
     "kospi": {
-      "value": 6579.04,
-      "date": "20260812",
+      "value": 6813.34,
+      "date": "20260813",
       "unit": "1980.01.04=100 ",
       "source": "ECOS"
     },
@@ -54,37 +54,37 @@
   "sectors": {
     "defense": {
       "volatility_30d": 5.4,
-      "change_pct": 2.4,
+      "change_pct": 0.38,
       "ticker": "449450.KS",
       "source": "yfinance"
     },
     "tech": {
-      "volatility_30d": 8.36,
-      "change_pct": 3.88,
+      "volatility_30d": 9.4,
+      "change_pct": 2.54,
       "ticker": "091160.KS",
       "source": "yfinance"
     },
     "energy": {
-      "volatility_30d": 3.62,
-      "change_pct": 0.43,
+      "volatility_30d": 3.58,
+      "change_pct": 1.24,
       "ticker": "117460.KS",
       "source": "yfinance"
     },
     "finance": {
-      "volatility_30d": 2.33,
-      "change_pct": 1.52,
+      "volatility_30d": 1.96,
+      "change_pct": 0.97,
       "ticker": "091170.KS",
       "source": "yfinance"
     },
     "bio": {
-      "volatility_30d": 4.03,
-      "change_pct": -0.06,
+      "volatility_30d": 3.97,
+      "change_pct": 0.83,
       "ticker": "244580.KS",
       "source": "yfinance"
     },
     "consumer": {
-      "volatility_30d": 5.75,
-      "change_pct": 2.97,
+      "volatility_30d": 5.64,
+      "change_pct": 2.16,
       "ticker": "102780.KS",
       "source": "yfinance"
     }
