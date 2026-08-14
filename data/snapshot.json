@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-14 22:39:49 KST",
+  "updated_at": "2026-08-14 22:57:35 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1415.0,
@@ -65,7 +65,7 @@
       "source": "yfinance"
     },
     "energy": {
-      "volatility_30d": 4.05,
+      "volatility_30d": 3.58,
       "change_pct": 1.67,
       "ticker": "117460.KS",
       "source": "yfinance"
