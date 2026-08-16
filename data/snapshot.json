@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-16 21:33:27 KST",
+  "updated_at": "2026-08-16 21:54:27 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1414.9,
@@ -59,7 +59,7 @@
       "source": "yfinance"
     },
     "tech": {
-      "volatility_30d": 8.1,
+      "volatility_30d": 9.39,
       "change_pct": 2.16,
       "ticker": "091160.KS",
       "source": "yfinance"
@@ -77,13 +77,13 @@
       "source": "yfinance"
     },
     "bio": {
-      "volatility_30d": 3.97,
+      "volatility_30d": 4.34,
       "change_pct": 0.06,
       "ticker": "244580.KS",
       "source": "yfinance"
     },
     "consumer": {
-      "volatility_30d": 5.65,
+      "volatility_30d": 6.18,
       "change_pct": 3.02,
       "ticker": "102780.KS",
       "source": "yfinance"
