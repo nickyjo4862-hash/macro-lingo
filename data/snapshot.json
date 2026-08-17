@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-17 20:50:29 KST",
+  "updated_at": "2026-08-17 21:16:45 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1414.9,
@@ -46,8 +46,8 @@
       "source": "FRED"
     },
     "dxy": {
-      "value": 119.0649,
-      "date": "2026-08-07",
+      "value": 118.9028,
+      "date": "2026-08-14",
       "source": "FRED"
     }
   },
