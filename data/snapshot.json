@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-19 07:51:54 KST",
+  "updated_at": "2026-08-19 08:24:54 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1411.0,
@@ -53,10 +53,10 @@
   },
   "sectors": {
     "defense": {
-      "volatility_30d": 3.5,
-      "change_pct": 0.0,
+      "volatility_30d": 5.39,
+      "change_pct": -2.11,
       "ticker": "449450.KS",
-      "source": "fallback"
+      "source": "yfinance"
     },
     "tech": {
       "volatility_30d": 8.08,
