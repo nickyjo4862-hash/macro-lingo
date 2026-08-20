@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-20 22:00:43 KST",
+  "updated_at": "2026-08-20 22:31:11 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1402.5,
@@ -38,6 +38,16 @@
     "us_fed_rate": {
       "value": 3.63,
       "date": "2026-07-01",
+      "source": "FRED"
+    },
+    "wti_oil": {
+      "value": 86.48,
+      "date": "2026-08-18",
+      "source": "FRED"
+    },
+    "dxy": {
+      "value": 118.9028,
+      "date": "2026-08-14",
       "source": "FRED"
     }
   },
