@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-24 07:43:00 KST",
+  "updated_at": "2026-08-24 08:25:51 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1383.6,
@@ -14,8 +14,8 @@
       "source": "ECOS"
     },
     "kr_3y_bond": {
-      "value": 3.416,
-      "date": "20260821",
+      "value": 3.407,
+      "date": "20260824",
       "unit": "연%",
       "source": "ECOS"
     },
