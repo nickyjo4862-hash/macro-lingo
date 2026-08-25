@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-25 17:14:15 KST",
+  "updated_at": "2026-08-25 17:45:15 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1380.6,
@@ -20,8 +20,8 @@
       "source": "ECOS"
     },
     "kospi": {
-      "value": 6696.96,
-      "date": "20260824",
+      "value": 6742.74,
+      "date": "20260825",
       "unit": "1980.01.04=100 ",
       "source": "ECOS"
     },
