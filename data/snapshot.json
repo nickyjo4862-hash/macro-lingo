@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-31 06:09:22 KST",
+  "updated_at": "2026-08-31 13:41:11 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1376.5,
@@ -14,8 +14,8 @@
       "source": "ECOS"
     },
     "kr_3y_bond": {
-      "value": 3.423,
-      "date": "20260828",
+      "value": 3.441,
+      "date": "20260831",
       "unit": "연%",
       "source": "ECOS"
     },
@@ -31,8 +31,8 @@
       "source": "FRED"
     },
     "vix": {
-      "value": 14.51,
-      "date": "2026-08-27",
+      "value": 14.43,
+      "date": "2026-08-28",
       "source": "FRED"
     },
     "wti_oil": {
@@ -48,38 +48,38 @@
   },
   "sectors": {
     "defense": {
-      "volatility_30d": 4.73,
-      "change_pct": -2.72,
+      "volatility_30d": 4.74,
+      "change_pct": -3.16,
       "ticker": "449450.KS",
       "source": "yfinance"
     },
     "tech": {
       "volatility_30d": 7.37,
-      "change_pct": -0.39,
+      "change_pct": 0.34,
       "ticker": "091160.KS",
       "source": "yfinance"
     },
     "energy": {
-      "volatility_30d": 3.34,
-      "change_pct": 1.73,
+      "volatility_30d": 3.35,
+      "change_pct": 2.02,
       "ticker": "117460.KS",
       "source": "yfinance"
     },
     "finance": {
       "volatility_30d": 1.89,
-      "change_pct": 0.24,
+      "change_pct": 0.03,
       "ticker": "091170.KS",
       "source": "yfinance"
     },
     "bio": {
-      "volatility_30d": 3.89,
-      "change_pct": -1.84,
+      "volatility_30d": 3.88,
+      "change_pct": -1.15,
       "ticker": "244580.KS",
       "source": "yfinance"
     },
     "consumer": {
       "volatility_30d": 5.05,
-      "change_pct": 0.08,
+      "change_pct": 0.34,
       "ticker": "102780.KS",
       "source": "yfinance"
     }
