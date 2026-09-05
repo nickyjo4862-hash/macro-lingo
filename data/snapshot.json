@@ -1,6 +1,30 @@
 {
-  "updated_at": "2026-09-05 15:32:35 KST",
+  "updated_at": "2026-09-05 17:37:24 KST",
   "macro": {
+    "fx_usd_krw": {
+      "value": 1359.5,
+      "date": "20260904",
+      "unit": "원",
+      "source": "ECOS"
+    },
+    "kr_base_rate": {
+      "value": 3.0,
+      "date": "202608",
+      "unit": "연%",
+      "source": "ECOS"
+    },
+    "kr_3y_bond": {
+      "value": 3.469,
+      "date": "20260904",
+      "unit": "연%",
+      "source": "ECOS"
+    },
+    "kospi": {
+      "value": 6687.21,
+      "date": "20260904",
+      "unit": "1980.01.04=100 ",
+      "source": "ECOS"
+    },
     "us_10y": {
       "value": 4.77,
       "date": "2026-09-03",
