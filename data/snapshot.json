@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-09 09:56:36 KST",
+  "updated_at": "2026-09-09 14:05:50 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1342.6,
@@ -31,18 +31,13 @@
       "source": "FRED"
     },
     "vix": {
-      "value": 15.3,
-      "date": "2026-09-07",
+      "value": 15.72,
+      "date": "2026-09-08",
       "source": "FRED"
     },
     "us_fed_rate": {
       "value": 3.63,
       "date": "2026-08-01",
-      "source": "FRED"
-    },
-    "wti_oil": {
-      "value": 91.48,
-      "date": "2026-09-01",
       "source": "FRED"
     },
     "dxy": {
