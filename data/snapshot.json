@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-29 13:40:45 KST",
+  "updated_at": "2026-09-29 18:51:49 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1360.0,
@@ -20,8 +20,8 @@
       "source": "ECOS"
     },
     "kospi": {
-      "value": 6889.74,
-      "date": "20260928",
+      "value": 6870.81,
+      "date": "20260929",
       "unit": "1980.01.04=100 ",
       "source": "ECOS"
     },
@@ -31,8 +31,8 @@
       "source": "FRED"
     },
     "vix": {
-      "value": 14.21,
-      "date": "2026-09-22",
+      "value": 16.07,
+      "date": "2026-09-28",
       "source": "FRED"
     },
     "us_fed_rate": {
