@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-10 11:45:06 KST",
+  "updated_at": "2026-11-10 18:51:31 KST",
   "macro": {
     "fx_usd_krw": {
       "value": 1357.9,
@@ -31,8 +31,8 @@
       "source": "FRED"
     },
     "vix": {
-      "value": 25.64,
-      "date": "2026-11-06",
+      "value": 19.92,
+      "date": "2026-11-09",
       "source": "FRED"
     },
     "us_fed_rate": {
