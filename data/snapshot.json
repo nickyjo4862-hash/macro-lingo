@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-11-24 20:56:39 KST",
+  "updated_at": "2026-11-25 03:54:21 KST",
   "macro": {
     "fx_usd_krw": {
-      "value": 1337.3,
-      "date": "20261123",
+      "value": 1346.6,
+      "date": "20261124",
       "unit": "원",
       "source": "ECOS"
     },
@@ -14,20 +14,20 @@
       "source": "ECOS"
     },
     "kr_3y_bond": {
-      "value": 3.628,
-      "date": "20261123",
+      "value": 3.635,
+      "date": "20261124",
       "unit": "연%",
       "source": "ECOS"
     },
     "kospi": {
-      "value": 4708.54,
-      "date": "20261123",
+      "value": 5006.03,
+      "date": "20261124",
       "unit": "1980.01.04=100 ",
       "source": "ECOS"
     },
     "us_10y": {
       "value": 4.92,
-      "date": "2026-11-20",
+      "date": "2026-11-23",
       "source": "FRED"
     },
     "vix": {
@@ -54,37 +54,37 @@
   "sectors": {
     "defense": {
       "volatility_30d": 4.23,
-      "change_pct": 7.81,
+      "change_pct": -0.03,
       "ticker": "449450.KS",
       "source": "yfinance"
     },
     "tech": {
-      "volatility_30d": 5.72,
-      "change_pct": 6.35,
+      "volatility_30d": 5.82,
+      "change_pct": -7.91,
       "ticker": "091160.KS",
       "source": "yfinance"
     },
     "energy": {
-      "volatility_30d": 3.66,
-      "change_pct": 6.4,
+      "volatility_30d": 3.62,
+      "change_pct": -1.88,
       "ticker": "117460.KS",
       "source": "yfinance"
     },
     "finance": {
-      "volatility_30d": 1.96,
-      "change_pct": 3.93,
+      "volatility_30d": 1.91,
+      "change_pct": -1.63,
       "ticker": "091170.KS",
       "source": "yfinance"
     },
     "bio": {
-      "volatility_30d": 2.66,
-      "change_pct": 2.62,
+      "volatility_30d": 2.71,
+      "change_pct": 2.84,
       "ticker": "244580.KS",
       "source": "yfinance"
     },
     "consumer": {
-      "volatility_30d": 3.7,
-      "change_pct": 7.06,
+      "volatility_30d": 3.86,
+      "change_pct": -6.54,
       "ticker": "102780.KS",
       "source": "yfinance"
     }
